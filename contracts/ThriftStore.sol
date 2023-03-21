@@ -6,7 +6,7 @@ pragma abicoder v2;
 contract ThriftStore {
 
     // We need to check whether this will work to generate itemId
-    uint64 idCounter = 0;
+    uint64 private idCounter = 0;
 
     // User struct user ID, password and their address
     struct User {
