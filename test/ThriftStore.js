@@ -4,37 +4,81 @@ const { expect } = require("chai");
 const { ethers } = require("hardhat");
 
 describe("Virtual Marketplace/Thrift store", function () {
+  beforeEach(async function () {
+    Market = await ethers.getContractFactory("ThriftStore");
+    market = await Market.deploy();
+    market.idCounter = 0;
+    [owner, user1, user2] = await ethers.getSigners();
+    await market.deployed();
+  });
 
-    beforeEach(async function () {
-        Market = await ethers.getContractFactory("ThriftStore");
-        market = await Market.deploy();
-        await market.deployed();
+  describe("Posting an ad", function () {
+    it("should not allow user to post an ad without a name", async function () {
+      await expect(
+        market.postAd(
+          "",
+          "1 Litre bottle of water",
+          ethers.utils.parseEther("1.5"),
+          "VanC"
+        )
+      ).to.be.revertedWith("You must add a name");
     });
 
-    describe("Posting an ad", function () {
-
-        it("should not allow user to post an ad without a name", async function () {
-            await expect(market.postAd("", "1 Litre bottle of water", ethers.utils.parseEther("1.5"), "VanC"))
-                        .to.be.revertedWith("You must add a name")
-        });
-
-        it("should not allow user to post an ad without a description", async function () {
-            await expect(market.postAd("Black bottle", "", ethers.utils.parseEther("1.5"), "VanC"))
-                        .to.be.revertedWith("You must add a description")
-        });
-
-        //it("should not allow user to post an ad without setting price", async function () {
-        //    await expect(market.postAd("Black bottle", "1 Litre bottle of water", NaN, "VanC"))
-        //                .to.be.revertedWith("You must set a price")
-        //});
-
-        it("should not allow user to post an ad without pickup address", async function () {
-            await expect(market.postAd("Black bottle", "1 Litre bottle of water", ethers.utils.parseEther("1.5"), ""))
-                        .to.be.revertedWith("You must add your address")
-        });
+    it("should not allow user to post an ad without a description", async function () {
+      await expect(
+        market.postAd(
+          "Black bottle",
+          "",
+          ethers.utils.parseEther("1.5"),
+          "VanC"
+        )
+      ).to.be.revertedWith("You must add a description");
     });
 
-    /*
+    it("should not allow user to post an ad without setting price", async function () {
+      await expect(
+        market.postAd(
+          "Black bottle",
+          "1 Litre bottle of water",
+          ethers.utils.parseEther("0"),
+          "VanC"
+        )
+      ).to.be.revertedWith("You must set a price");
+    });
+
+    it("should not allow user to post an ad without pickup address", async function () {
+      await expect(
+        market.postAd(
+          "Black bottle",
+          "1 Litre bottle of water",
+          ethers.utils.parseEther("1.5"),
+          ""
+        )
+      ).to.be.revertedWith("You must add your address");
+    });
+  });
+
+  describe("Removing an ad", function () {
+    it("should remove an ad", async function () {
+      await market
+        .connect(user1)
+        .postAd("item 1", "item description", 100, "123 Main St");
+      await market.connect(user1).removeAd(1);
+      const item = await market.getItem(1);
+      expect(item.soldStatus).to.equal(2); // SoldStatus.REMOVED
+    });
+  });
+
+  describe("Getting Refund For an ad", function () {
+    it("should cancel an order", async function () {
+      const item = market.items[user1.address];
+      expect(market.connect(user1).requestRefund(1234)).to.be.revertedWith(
+        "The item has not been sold yet"
+      );
+    });
+  });
+
+  /*
     it("should not allow a customer to make an order with an empty Main course", async function () {
         await expect(reservation.makeReservation("Wings", "", { value: ethers.utils.parseEther("1.5") }))
                                 .to.be.revertedWith("Choosing Main Course is necessary")
@@ -112,4 +156,4 @@ describe("Virtual Marketplace/Thrift store", function () {
         expect(balance).to.be.equal(ethers.utils.parseEther("1.5"));
     })
     */
-})
+});
