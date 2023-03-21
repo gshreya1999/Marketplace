@@ -10,6 +10,8 @@ contract ThriftStore {
     // User struct user ID, password and their address
     struct User {
         string userId;
+        ItemInfo[] itemsPosted;
+        ItemInfo[] itemsBought;
         bytes32 passwordHash;
         address userAccountAddress; // check it later
     }
@@ -32,6 +34,8 @@ contract ThriftStore {
         uint64 itemPrice;
         //string imageBase64;  // We can think of adding an image with the ad
         string itemName;
+        //unique itemId;
+        uint256 itemId;
         string itemDescription;
         SoldStatus soldStatus;
         //address payable seller;
@@ -51,6 +55,8 @@ contract ThriftStore {
 
     // Map the itemId to the owner/seller
     mapping(uint256 => address) sellers;
+
+    mapping(address => User) users;
 
     // Map itemId to its info
     mapping(uint256 => ItemInfo) items;
@@ -136,12 +142,24 @@ contract ThriftStore {
         items[idCounter] = ItemInfo(
             itemPrice,
             itemName,
+            idCounter,
             itemDescription,
             SoldStatus.POSTED,
             executionTime,
             RefundStatus.NONE,
             senderAddress
         );
+
+        users[msg.sender].itemsPosted.push(ItemInfo(
+            itemPrice,
+            itemName,
+            idCounter,
+            itemDescription,
+            SoldStatus.POSTED,
+            executionTime,
+            RefundStatus.NONE,
+            senderAddress
+        ));
     }
 
     // Function to remove an ad posted by the seller
