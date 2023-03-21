@@ -69,11 +69,21 @@ describe("Virtual Marketplace/Thrift store", function () {
     });
   });
 
+  describe("Buying a posted item ", function () {
+    it("should  have sufficient balance to buy an item ", async function () {
+      await market
+        .connect(user1)
+        .postAd("item 1", "item description", 100, "123 Main St");
+      await expect(market.connect(user2).buyItem(1)).to.be.revertedWith(
+        "You don't have enough ether"
+      );
+    });
+  });
+
   describe("Getting Refund For an ad", function () {
     it("should cancel an order", async function () {
-      const item = market.items[user1.address];
       expect(market.connect(user1).requestRefund(1234)).to.be.revertedWith(
-        "The item has not been sold yet"
+        "Only the buyer can request a refund"
       );
     });
   });
