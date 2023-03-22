@@ -75,6 +75,22 @@ contract ThriftStore {
         );
         _;
     }
+    // Modifier to check a validAdForUpdate
+    modifier validAdForUpdate(ItemInfo memory updatedItem) {
+        require(bytes(updatedItem.itemName).length > 0, "You must add a name");
+        require(
+            bytes(updatedItem.itemDescription).length > 0,
+            "You must add a description"
+        );
+        //require(bytes(updatedItem.senderAddress).length > 0, "You must add your address");
+        require(updatedItem.itemPrice > 0, "You must set a price");
+        require(
+            sellers[updatedItem.itemId] == msg.sender,
+            "Only the seller can update the ad"
+        );
+
+        _;
+    }
 
     // Events
     // We can decide what events we want to keep
@@ -164,7 +180,7 @@ contract ThriftStore {
         items[id].soldStatus = SoldStatus.REMOVED;
         delete items[id];
         uint256[] memory itemIds = getAllItemIdsPostedByUser(msg.sender);
-      
+
         // Find the index of the item in the array
         uint256 indexToRemove;
         for (uint256 i = 0; i < itemIds.length; i++) {
@@ -173,7 +189,21 @@ contract ThriftStore {
                 break;
             }
         }
-         delete itemIds[indexToRemove];
+        delete itemIds[indexToRemove];
+    }
+
+    //Function to update an ad
+    function updateAd(
+        uint256 id,
+        ItemInfo memory updatedItem
+    ) public validAdForUpdate(updatedItem) {
+        // Checking that the user posts all the required information
+
+        uint256 executionTime = block.timestamp;
+
+        ItemInfo memory existingItem = getItem(id);
+
+        items[existingItem.itemId] = updatedItem;
     }
 
     // Function to allow buyer to request a refund
@@ -216,7 +246,7 @@ contract ThriftStore {
     }
 
     //Getter for Item
-    function getItem(uint itemId) external view returns (ItemInfo memory) {
+    function getItem(uint itemId) public view returns (ItemInfo memory) {
         return items[itemId];
     }
 
@@ -232,7 +262,7 @@ contract ThriftStore {
     function getAllItemIdsBoughtByUser(
         address userAddress
     ) public view returns (uint256[] memory) {
-        User storage userInfo = users[userAddress];
-        return userInfo.itemsBought;
+        User storage user = users[userAddress];
+        return user.itemsBought;
     }
 }
