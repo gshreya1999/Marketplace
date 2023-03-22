@@ -10,8 +10,8 @@ contract ThriftStore {
     // User struct user ID, password and their address
     struct User {
         string userId;
-        ItemInfo[] itemsPosted;
-        ItemInfo[] itemsBought;
+        uint256[] itemsPosted;
+        uint256[] itemsBought;
         bytes32 passwordHash;
         address userAccountAddress; // check it later
     }
@@ -114,6 +114,7 @@ contract ThriftStore {
         );
         // Updating the status of the ad
         items[id].soldStatus = SoldStatus.SOLD;
+        users[msg.sender].itemsBought.push(id);
     }
 
     // Function to post an ad on the marketplace
@@ -150,16 +151,7 @@ contract ThriftStore {
             senderAddress
         );
 
-        users[msg.sender].itemsPosted.push(ItemInfo(
-            itemPrice,
-            itemName,
-            idCounter,
-            itemDescription,
-            SoldStatus.POSTED,
-            executionTime,
-            RefundStatus.NONE,
-            senderAddress
-        ));
+        users[msg.sender].itemsPosted.push(idCounter);
     }
 
     // Function to remove an ad posted by the seller
@@ -169,8 +161,19 @@ contract ThriftStore {
             items[id].soldStatus == SoldStatus.POSTED,
             "This item has already been sold or removed"
         );
-
         items[id].soldStatus = SoldStatus.REMOVED;
+        delete items[id];
+        uint256[] memory itemIds = getAllItemIdsPostedByUser(msg.sender);
+      
+        // Find the index of the item in the array
+        uint256 indexToRemove;
+        for (uint256 i = 0; i < itemIds.length; i++) {
+            if (itemIds[i] == id) {
+                indexToRemove = i;
+                break;
+            }
+        }
+         delete itemIds[indexToRemove];
     }
 
     // Function to allow buyer to request a refund
@@ -215,5 +218,21 @@ contract ThriftStore {
     //Getter for Item
     function getItem(uint itemId) external view returns (ItemInfo memory) {
         return items[itemId];
+    }
+
+    //Getter for  all Items posted by user
+    function getAllItemIdsPostedByUser(
+        address userAddress
+    ) public view returns (uint256[] memory) {
+        User storage userInfo = users[userAddress];
+        return userInfo.itemsPosted;
+    }
+
+    //Getter for  all Items bought by user
+    function getAllItemIdsBoughtByUser(
+        address userAddress
+    ) public view returns (uint256[] memory) {
+        User storage userInfo = users[userAddress];
+        return userInfo.itemsBought;
     }
 }
