@@ -8,10 +8,10 @@ describe("Virtual Marketplace/Thrift store", function () {
     Market = await ethers.getContractFactory("ThriftStore");
     market = await Market.deploy();
     market.idCounter = 0;
-    [owner, user1, user2] = await ethers.getSigners();
+    [owner, seller, buyer,user] = await ethers.getSigners();
     await market.deployed();
   });
-
+  
   describe("Posting an ad", function () {
     it("should not allow user to post an ad without a name", async function () {
       await expect(
@@ -56,114 +56,118 @@ describe("Virtual Marketplace/Thrift store", function () {
         )
       ).to.be.revertedWith("You must add your address");
     });
-  });
+    it("should allow user to post an ad ", async function () {
+      await market
+        .postAd("item 1", "item description", 100, "123 Main St");
+        const item = await market.getItem(1);
+       expect(item.itemId).to.equal(1);
+       expect(item.itemName).to.equal("item 1");
+       expect(item.soldStatus).to.equal(0);
+    });
+   });
+
+
+// Describe the test suite
+// describe("postAd", function () {
+//   // Define variables for the test
+//   let itemName = "Test Item";
+//   let itemDescription = "This is a test item";
+//   let itemPrice = 100;
+//   let senderAddress = "0x123456789";
+
+//   // Define the test case
+//   it("should create a new item with the correct information", async function () {
+//     // Call the function
+//     await market.postAd(itemName, itemDescription, itemPrice, senderAddress);
+
+//     // Get the item information
+//     let item = await market.getItem(1);;
+
+//     // Check that the item information is correct
+//     expect(item.price).to.equal(itemPrice);
+//     expect(item.name).to.equal(itemName);
+//     expect(item.id).to.equal(1);
+//     expect(item.description).to.equal(itemDescription);
+//     expect(item.status).to.equal(0);
+//     expect(item.executionTime).to.be.above(0);
+//     expect(item.refundStatus).to.equal(0);
+//     expect(item.senderAddress).to.equal(senderAddress);
+
+//     // Check that the seller's itemsPosted array has been updated
+//     // let itemsPosted = await market.getItemsPostedBySeller();
+//     // expect(itemsPosted).to.have.lengthOf(1);
+//     // expect(itemsPosted[0]).to.equal(1);
+//   });
+
+//   // Define a test case for missing item name
+//   it("should throw an error when itemName is missing", async function () {
+//     await expect(
+//       market.postAd("", itemDescription, itemPrice, senderAddress)
+//     ).to.be.revertedWith("You must add a name");
+//   });
+
+//   // Define a test case for missing item description
+//   it("should throw an error when itemDescription is missing", async function () {
+//     await expect(
+//       market.postAd(itemName, "", itemPrice, senderAddress)
+//     ).to.be.revertedWith("You must add a description");
+//   });
+
+//   // Define a test case for missing sender address
+//   it("should throw an error when senderAddress is missing", async function () {
+//     await expect(
+//       market.postAd(itemName, itemDescription, itemPrice, "")
+//     ).to.be.revertedWith("You must add your address");
+//   });
+
+//   // Define a test case for missing item price
+//   it("should throw an error when itemPrice is missing", async function () {
+//     await expect(
+//       market.postAd(itemName, itemDescription, 0, senderAddress)
+//     ).to.be.revertedWith("You must set a price");
+//   });
+// });
 
   describe("Removing an ad", function () {
     it("should remove an ad", async function () {
       await market
-        .connect(user1)
         .postAd("item 1", "item description", 100, "123 Main St");
-      await market.connect(user1).removeAd(1);
+      await market.removeAd(1);
       const item = await market.getItem(1);
+      expect(item.itemName).to.equal("item 1");
       expect(item.soldStatus).to.equal(2); // SoldStatus.REMOVED
     });
+    
+    it("should not allow seller anyone but seller to remove ad", async function () {
+       [user] = await ethers.getSigners();
+        await market.postAd("item 2", "item description", 10, "123 Oak St");
+        expect(await market.connect(user).removeAd(1)).to.be.revertedWith("Only the seller can remove the ad");
   });
+});
+
 
   describe("Buying a posted item ", function () {
     it("should  have sufficient balance to buy an item ", async function () {
       await market
-        .connect(user1)
+        .connect(seller)
         .postAd("item 1", "item description", 100, "123 Main St");
-      await expect(market.connect(user2).buyItem(1)).to.be.revertedWith(
+      await expect(market.connect(buyer).buyItem(1)).to.be.revertedWith(
         "You don't have enough ether"
       );
+    });
+    it("should  allow user to buy an item ", async function () {
+       await expect(market.buyItem(1, { value: ethers.utils.parseEther("0.1") }));
+       const item = await market.getItem(1);
+       expect(item.soldStatus).to.equal(1);
+       
     });
   });
 
   describe("Getting Refund For an ad", function () {
     it("should cancel an order", async function () {
-      expect(market.connect(user1).requestRefund(1234)).to.be.revertedWith(
+      expect(market.connect(seller).requestRefund(1234)).to.be.revertedWith(
         "Only the buyer can request a refund"
       );
     });
   });
-
-  /*
-    it("should not allow a customer to make an order with an empty Main course", async function () {
-        await expect(reservation.makeReservation("Wings", "", { value: ethers.utils.parseEther("1.5") }))
-                                .to.be.revertedWith("Choosing Main Course is necessary")
-    });
-
-    it("Cannot check in if isValidReservation is false", async function () {
-        // isValidReservation is set to true only when makeReservation is called
-        // So, if checkIn() is directly called it must be reverted
-        await expect(reservation.checkIn()).to.be.reverted
-    });
-
-    it("Cannot refund if the customer has checked in", async function () {
-        await reservation.makeReservation("Wings", "Biryani", { value: ethers.utils.parseEther("1.5") });
-        await reservation.checkIn();
-
-        // Verify cancelling is not allowed after checking-in
-        await expect(reservation.cancelBooking()).to.be.revertedWith("Customer has already checked in");
-    });
-
-    it("Cannot make another reservation before she/he has checked in or canceled the existing order", async function () {
-        await reservation.makeReservation("Wings", "Biryani", { value: ethers.utils.parseEther("1.5") });
-
-        // Verify a new reservation without checking-in or cancelling is reverted
-        await expect(reservation.makeReservation("Sushi", "Platter", { value: ethers.utils.parseEther("1.5") }))
-                                .to.be.revertedWith("You can't make another reservation while another is in progress");
-    })
-
-    it("Cannot make a reservation if he/she does not send enough ether to the smart contract", async function () {
-        await expect(reservation.makeReservation("Wings", "Biryani",{ value: ethers.utils.parseEther("0.1") }))
-                                    .to.be.revertedWith("Not enough ethers sent")
-    })
-
-    it("Should make reservation successfully if everything is OK", async function () {
-        [owner, addr1] = await ethers.getSigners();
-        
-        // Making a valid reservation
-        await reservation.connect(addr1).makeReservation("Wings", "Biryani", { value: ethers.utils.parseEther("1.5") });
-        
-        // Checking if isValidReservation is set to true
-        const order = await reservation.reservations(addr1.address);
-        await expect(order.isValidReservation).to.be.true
-    })
-
-    
-    it("Should receive money when reservation is cancelled", async function () {
-        [owner, addr1] = await ethers.getSigners();
-
-        // Make a valid reservation and check balance
-        await reservation.connect(addr1).makeReservation("Wings", "Biryani", { value: ethers.utils.parseEther("1.5") });
-        const initialBalance = await ethers.provider.getBalance(addr1.address);
-
-        // Cancel the reservation and check balance again
-        await reservation.connect(addr1).cancelBooking();
-        const finalBalance = await ethers.provider.getBalance(addr1.address);
-
-        // Verify the refund
-        expect(finalBalance).greaterThan(initialBalance);
-    });
-      
-    it("Should be able to check in if everything is good", async function () {
-        [owner, addr1] = await ethers.getSigners();
-
-        // Call makeReservation and checkIn functions
-        await reservation.connect(addr1).makeReservation("Wings", "Biryani", { value: ethers.utils.parseEther("1.5") });
-        await reservation.connect(addr1).checkIn();
-
-        // Verify that hasCheckedIn is set to true
-        const order = await reservation.reservations(addr1.address);
-        await expect(order.hasCheckedIn).to.be.true
-    })
-
-    it("Should have correct balance in smart contract if reservation has been made", async function () {
-        await reservation.makeReservation("Wings", "Biryani", { value: ethers.utils.parseEther("1.5") });
-        const balance = await ethers.provider.getBalance(reservation.address);
-        expect(balance).to.be.equal(ethers.utils.parseEther("1.5"));
-    })
-    */
-});
+ });
