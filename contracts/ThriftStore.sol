@@ -1,17 +1,15 @@
 // SPDX-License-Identifier: UNLICENSED
 
 pragma solidity ^0.8.9;
-pragma abicoder v2;
+import "hardhat/console.sol";
 
 contract ThriftStore {
     // We need to check whether this will work to generate itemId
-    uint64 private idCounter = 0;
+    uint private idCounter = 0;
 
     // User struct user ID, password and their address
     struct User {
         string userId;
-        uint256[] itemsPosted;
-        uint256[] itemsBought;
         bytes32 passwordHash;
         address userAccountAddress; // check it later
     }
@@ -64,6 +62,11 @@ contract ThriftStore {
     // Map item id to its Transaction info
     mapping(uint256 => TransactionInfo) transactions;
 
+    // Map user to the items sold
+    mapping(address => uint256[]) itemsPosted;
+
+    // Map user to items bought
+    mapping(address => uint256[]) itemsBought;
     // User address to username
     mapping(address => bytes32) activeUsers; // NOT SURE if we are gonna keep this
 
@@ -75,20 +78,18 @@ contract ThriftStore {
         );
         _;
     }
-    // Modifier to check a validAdForUpdate
-    modifier validAdForUpdate(ItemInfo memory updatedItem) {
-        require(bytes(updatedItem.itemName).length > 0, "You must add a name");
+    // Modifier to check a validAd
+    modifier validAd( string memory itemName,
+        string memory itemDescription,
+        uint64 itemPrice,
+        string memory senderAddress) {
+        require(bytes(itemName).length > 0, "You must add a name");
         require(
-            bytes(updatedItem.itemDescription).length > 0,
+            bytes(itemDescription).length > 0,
             "You must add a description"
         );
-        //require(bytes(updatedItem.senderAddress).length > 0, "You must add your address");
-        require(updatedItem.itemPrice > 0, "You must set a price");
-        require(
-            sellers[updatedItem.itemId] == msg.sender,
-            "Only the seller can update the ad"
-        );
-
+        require(bytes(senderAddress).length > 0, "You must add your address");
+        require(itemPrice > 0, "You must set a price");
         _;
     }
 
@@ -130,7 +131,7 @@ contract ThriftStore {
         );
         // Updating the status of the ad
         items[id].soldStatus = SoldStatus.SOLD;
-        users[msg.sender].itemsBought.push(id);
+        itemsBought[msg.sender].push(id);
     }
 
     // Function to post an ad on the marketplace
@@ -167,7 +168,7 @@ contract ThriftStore {
             senderAddress
         );
 
-        users[msg.sender].itemsPosted.push(idCounter);
+       itemsPosted[msg.sender].push(idCounter);
     }
 
     // Function to remove an ad posted by the seller
@@ -178,32 +179,38 @@ contract ThriftStore {
             "This item has already been sold or removed"
         );
         items[id].soldStatus = SoldStatus.REMOVED;
-        delete items[id];
-        uint256[] memory itemIds = getAllItemIdsPostedByUser(msg.sender);
-
-        // Find the index of the item in the array
-        uint256 indexToRemove;
-        for (uint256 i = 0; i < itemIds.length; i++) {
-            if (itemIds[i] == id) {
-                indexToRemove = i;
-                break;
-            }
-        }
-        delete itemIds[indexToRemove];
+        delete sellers[id];
     }
 
     //Function to update an ad
     function updateAd(
         uint256 id,
-        ItemInfo memory updatedItem
-    ) public validAdForUpdate(updatedItem) {
+        string memory itemName,
+        string memory itemDescription,
+        uint64 itemPrice,
+        string memory senderAddress
+    ) public validAd(
+        itemName,
+        itemDescription,
+       itemPrice,
+        senderAddress) {
         // Checking that the user posts all the required information
 
-        uint256 executionTime = block.timestamp;
+        require(id>0,"ID does not exist");
+        require(sellers[id] == msg.sender, "Only the seller can update the ad");
+        
+        ItemInfo memory oldItem = getItem(id);
 
-        ItemInfo memory existingItem = getItem(id);
-
-        items[existingItem.itemId] = updatedItem;
+        items[id] =  ItemInfo(
+            itemPrice,
+            itemName,
+            id,
+            itemDescription,
+            oldItem.soldStatus,
+            oldItem.time,
+            oldItem.refundStatus,
+            senderAddress
+        );
     }
 
     // Function to allow buyer to request a refund
@@ -242,27 +249,41 @@ contract ThriftStore {
             // Update status of the item
             items[id].refundStatus = RefundStatus.ACCEPTED;
             items[id].soldStatus = SoldStatus.POSTED;
+            removeItemFromArray(itemsBought[transactions[id].buyer],id);
+            delete transactions[id];
+            
         } else items[id].refundStatus = RefundStatus.DENIED;
     }
 
     //Getter for Item
-    function getItem(uint itemId) public view returns (ItemInfo memory) {
+    function getItem(uint itemId) public  view  returns (ItemInfo memory) {
         return items[itemId];
+    }
+    function getCounter() public view returns (uint) {
+        return idCounter;
     }
 
     //Getter for  all Items posted by user
     function getAllItemIdsPostedByUser(
         address userAddress
     ) public view returns (uint256[] memory) {
-        User storage userInfo = users[userAddress];
-        return userInfo.itemsPosted;
+        return itemsPosted[userAddress];
     }
 
     //Getter for  all Items bought by user
     function getAllItemIdsBoughtByUser(
         address userAddress
     ) public view returns (uint256[] memory) {
-        User storage user = users[userAddress];
-        return user.itemsBought;
+        return itemsBought[userAddress];
     }
+    function removeItemFromArray(uint[] memory array, uint256 item) public {
+    for (uint i = 0; i < array.length; i++) {
+        if (array[i] == item) {
+            array[i] = array[array.length - 1];
+           delete array[array.length-1];
+            break;
+        }
+    }
+    }
+
 }
