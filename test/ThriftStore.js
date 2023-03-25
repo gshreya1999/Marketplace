@@ -66,68 +66,6 @@ describe("Virtual Marketplace/Thrift store", function () {
     });
    });
 
-
-// Describe the test suite
-// describe("postAd", function () {
-//   // Define variables for the test
-//   let itemName = "Test Item";
-//   let itemDescription = "This is a test item";
-//   let itemPrice = 100;
-//   let senderAddress = "0x123456789";
-
-//   // Define the test case
-//   it("should create a new item with the correct information", async function () {
-//     // Call the function
-//     await market.postAd(itemName, itemDescription, itemPrice, senderAddress);
-
-//     // Get the item information
-//     let item = await market.getItem(1);;
-
-//     // Check that the item information is correct
-//     expect(item.price).to.equal(itemPrice);
-//     expect(item.name).to.equal(itemName);
-//     expect(item.id).to.equal(1);
-//     expect(item.description).to.equal(itemDescription);
-//     expect(item.status).to.equal(0);
-//     expect(item.executionTime).to.be.above(0);
-//     expect(item.refundStatus).to.equal(0);
-//     expect(item.senderAddress).to.equal(senderAddress);
-
-//     // Check that the seller's itemsPosted array has been updated
-//     // let itemsPosted = await market.getItemsPostedBySeller();
-//     // expect(itemsPosted).to.have.lengthOf(1);
-//     // expect(itemsPosted[0]).to.equal(1);
-//   });
-
-//   // Define a test case for missing item name
-//   it("should throw an error when itemName is missing", async function () {
-//     await expect(
-//       market.postAd("", itemDescription, itemPrice, senderAddress)
-//     ).to.be.revertedWith("You must add a name");
-//   });
-
-//   // Define a test case for missing item description
-//   it("should throw an error when itemDescription is missing", async function () {
-//     await expect(
-//       market.postAd(itemName, "", itemPrice, senderAddress)
-//     ).to.be.revertedWith("You must add a description");
-//   });
-
-//   // Define a test case for missing sender address
-//   it("should throw an error when senderAddress is missing", async function () {
-//     await expect(
-//       market.postAd(itemName, itemDescription, itemPrice, "")
-//     ).to.be.revertedWith("You must add your address");
-//   });
-
-//   // Define a test case for missing item price
-//   it("should throw an error when itemPrice is missing", async function () {
-//     await expect(
-//       market.postAd(itemName, itemDescription, 0, senderAddress)
-//     ).to.be.revertedWith("You must set a price");
-//   });
-// });
-
   describe("Removing an ad", function () {
     it("should remove an ad", async function () {
       await market
