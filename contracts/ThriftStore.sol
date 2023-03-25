@@ -175,7 +175,7 @@ contract ThriftStore {
             sendEther(payable(transactions[id].buyer), items[id].itemPrice);
 
             // Update status of the item
-            items[id].refundStatus = RefundStatus.ACCEPTED;
+            items[id].refundStatus = RefundStatus.NONE;
             items[id].soldStatus = SoldStatus.POSTED;
             
             removeItemFromArray(itemsBought[transactions[id].buyer],id);
