@@ -4,50 +4,39 @@ pragma solidity ^0.8.9;
 import "hardhat/console.sol";
 
 contract ThriftStore {
-    // We need to check whether this will work to generate itemId
+    
+    // counter to generate item IDs
     uint private idCounter = 0;
 
-    // User struct user ID, password and their address
+    // User struct that contains user ID, password and their address
     struct User {
         string userId;
         bytes32 passwordHash;
-        address userAccountAddress; // check it later
+        address userAccountAddress;
     }
 
-    enum SoldStatus {
-        POSTED,
-        SOLD,
-        REMOVED
-    }
-    enum RefundStatus {
-        NONE,
-        REQUESTED,
-        DENIED,
-        ACCEPTED
-    }
+    enum SoldStatus { POSTED, SOLD, REMOVED }
+    enum RefundStatus { NONE, REQUESTED, DENIED }
 
-    // ItemInfo struct has information of items posted by the sellers
+    // ItemInfo struct stores information of items posted by the sellers
     struct ItemInfo {
-        //string contactUserName;  // Not sure
+        //string contactUserName;
         uint64 itemPrice;
-        //string imageBase64;  // We can think of adding an image with the ad
+        //string imageBase64;
         string itemName;
-        //unique itemId;
         uint256 itemId;
         string itemDescription;
         SoldStatus soldStatus;
-        //address payable seller;
         uint256 time;
         RefundStatus refundStatus;
         string orderPickupAddress;
     }
 
-    // Not sure if we need to keep all transactions info
+    // Stores information of all transactions made
     struct TransactionInfo {
-        //address seller;
         address buyer;
         uint256 time;
-        uint256 itemID; // Need to check if it is redundant to add order id here
+        uint256 itemID;
         uint64 itemPrice;
     }
 
