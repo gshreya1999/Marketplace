@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { ethers } from "ethers";
-
+import Navbar from "./components/Navbar"
+import Home from "./routes/Home"
+import About from "./routes/About"
+import PostAd from "./routes/PostAd"
+import { Route, Routes } from "react-router-dom"
 function App() {
   const [balance, setBalance] = useState();
   const [counter, setCounter] = useState('');
@@ -304,15 +308,16 @@ function App() {
 
 
   return (
-    <div className="container">
-      <div className="row mt-5">
-
-        <div className="col">
-          <p>Contract Balance: {balance} ETH</p>
-         <p>counter: {counter} </p>
-        </div>
+    <>
+      <Navbar />
+      <div className="container">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/post" element={<PostAd />} />
+          <Route path="/about" element={<About />} />
+        </Routes>
       </div>
-    </div>
+    </>
   );
 }
 
