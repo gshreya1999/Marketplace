@@ -1,55 +1,14 @@
-* {
-  box-sizing: border-box;
-}
+@import url(https://fonts.googleapis.com/css?family=Roboto:300);
 
 body {
-  margin: 0;
-}
-
-.container {
-  margin: 1rem;
-  text-align: center;
-}
-
-.nav {
-  background-color: #333;
-  color: white;
+  background: #5267b8;
   display: flex;
-  justify-content: space-between;
-  align-items: stretch;
-  gap: 2rem;
-  padding: 0 1rem;
-}
-
-.site-title {
-  font-size: 2rem;
-}
-
-.nav ul {
-  padding: 0;
-  margin: 0;
-  list-style: none;
-  display: flex;
-  gap: 1rem;
-}
-
-.nav a {
-  color: inherit;
-  text-decoration: none;
-  height: 100%;
-  display: flex;
+  min-height: 100vh;
+  justify-content: center;
   align-items: center;
-  padding: .25rem;
 }
 
-.nav li.active {
-  background-color: #555;
-}
-
-.nav li:hover {
-  background-color: #777;
-}
-form-container {
+.form-container {
   width: 360px;
   background-color: white;
   margin: auto;
@@ -103,20 +62,4 @@ button {
 
 button:disabled {
   cursor: default;
-}
-formbackground {
-  background: #76b852;
-  display: flex;
-  min-height: 100vh;
-  justify-content: center;
-  align-items: center;
-}
-.long-text{
-  height:120px; 
-  width:100%;
-  margin: 10px 0 10px 0;
-  padding: 15px;
-  font-size: 16px;
-  border: 0;
-  font-family: "Roboto", sans-serif;
 }
