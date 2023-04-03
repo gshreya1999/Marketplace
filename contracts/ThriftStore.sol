@@ -5,7 +5,9 @@ import "hardhat/console.sol";
 
 contract ThriftStore {
     
-    // counter to generate item ID
+
+    // counter to generate item IDs
+
     uint private idCounter = 0;
 
     // User struct that contains user ID, password and their address
@@ -76,11 +78,13 @@ contract ThriftStore {
     }
 
     // Function to send ethers between users
+
     function sendEther(address payable _addr, uint64 _amount) public payable {
         require(msg.value >= _amount, "Insufficient Ether");
 
         (bool success, ) = _addr.call{value: _amount}("");
         require(success, "Ether transfer failed");
+
     }
 
     // Function to buy an item that has been posted in the marketplace
