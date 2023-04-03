@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { ethers } from "ethers";
 import Navbar from "./components/Navbar"
 import Home from "./routes/Home"
-import About from "./routes/About"
+import Settings from "./routes/Settings"
 import PostAd from "./routes/PostAd"
 import { Route, Routes } from "react-router-dom"
 function App() {
@@ -314,7 +314,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/post" element={<PostAd />} />
-          <Route path="/about" element={<About />} />
+          <Route path="/settings" element={<Settings />} />
         </Routes>
       </div>
     </>

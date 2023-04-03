@@ -8,7 +8,7 @@ export default function Navbar() {
       </Link>
       <ul>
         <CustomLink to="/post">Post An Add</CustomLink>
-        <CustomLink to="/about">Settings</CustomLink>
+        <CustomLink to="/settings">Settings</CustomLink>
       </ul>
     </nav>
   )
