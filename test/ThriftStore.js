@@ -12,7 +12,7 @@ describe("Virtual Marketplace/Thrift store", function () {
     await market.deployed();
   });
   
-  describe("Posting an ad", function () {
+  describe("Posting an ad", function () {4
     it("should not allow user to post an ad without a name", async function () {
       await expect(
         market.postAd(
@@ -82,7 +82,6 @@ describe("Virtual Marketplace/Thrift store", function () {
         expect(await market.connect(user).removeAd(1)).to.be.revertedWith("Only the seller can remove the ad");
   });
 });
-
 
   describe("Buying a posted item ", function () {
     it("should  have sufficient balance to buy an item ", async function () {
