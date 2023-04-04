@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-export default function Settings(props) {
+export default function Settings() {
     return <div>
        <Link to="/transactions">
        <button className="button">

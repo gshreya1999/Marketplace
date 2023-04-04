@@ -1,9 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState} from "react";
 import { ethers } from "ethers";
 import { ABI,contractAddress } from "../info/info";
 export default function PostAd() {
 const [itemName,setItemName]=useState('');
-const [items,setItems]=useState('');
 const [address, setAddress] = useState('');
 const [itemPrice,setItemPrice]=useState('');
 const [itemDescription,setItemDescription]=useState('');

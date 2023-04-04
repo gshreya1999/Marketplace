@@ -1,5 +1,5 @@
 
-export default function TransactionsInfo(props) {
+export default function TransactionsInfo() {
     return (
         <div class="container">
 
