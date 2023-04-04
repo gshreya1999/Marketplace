@@ -41,12 +41,6 @@ let signer;
     //setItems(item);
 
   } 
-interface Item { 
-  itemName:string, 
-  itemPrice:number, 
-  itemDescription:string, 
-  itemPickupLocation:string;
-} 
 
    return (
       <div class="form-container">
@@ -58,6 +52,7 @@ interface Item {
             value={itemName}
             onChange={(e)=>setItemName(e.target.value)}
             placeholder="Item Name"
+            required="true"
             name="firstName"
           />
           <input
@@ -68,6 +63,7 @@ interface Item {
             onChange={(e)=>setItemPickupLocation(e.target.value)}
             placeholder="Pick up Location"
             name="email"
+            required="true"
           />
           <input
             id="number"
@@ -76,6 +72,7 @@ interface Item {
             value={itemPrice}
             onChange={(e)=>setItemPrice(e.target.value)}
             placeholder="Item price"
+            required="true"
             name="number"
           />
            <textarea
@@ -85,6 +82,7 @@ interface Item {
             value={itemDescription}
             onChange={(e)=>setItemDescription(e.target.value)}
             placeholder="Item Description"
+            required="true"
             name="lastName"
           />
            <input type="file" name="picture" />
@@ -92,7 +90,6 @@ interface Item {
             Post
           </button>
         </form>
-        { console.log(contract)}
       </div>
       
     );
