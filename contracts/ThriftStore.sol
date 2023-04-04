@@ -41,24 +41,24 @@ contract ThriftStore {
     }
 
     // Map the itemId to the owner/seller
-    mapping(uint256 => address) sellers;
+    mapping(uint256 => address) public sellers;
 
-    mapping(address => User) users;
+    mapping(address => User) public users;
 
     // Map itemId to its info
-    mapping(uint256 => ItemInfo) items;
+    mapping(uint256 => ItemInfo) public items;
 
     // Map item id to its Transaction info
-    mapping(uint256 => TransactionInfo) transactions;
+    mapping(uint256 => TransactionInfo)public transactions;
 
     // Map user to the items sold
-    mapping(address => uint256[]) itemsPosted;
+    mapping(address => uint256[]) public itemsPosted;
 
     // Map user to items bought
-    mapping(address => uint256[]) itemsBought;
+    mapping(address => uint256[]) public itemsBought;
     
     // User address to username
-    mapping(address => bytes32) activeUsers; // NOT SURE if we are gonna keep this
+    mapping(address => bytes32) public activeUsers; // NOT SURE if we are gonna keep this
 
     // Modifier to check a valid item
     modifier validItem(uint256 id) {
