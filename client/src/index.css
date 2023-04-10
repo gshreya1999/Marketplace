@@ -96,9 +96,12 @@ input {
 }
 
 button {
-  background: #4caf50;
-  color: white;
+  background: lightblue;
+  color: black;
   cursor: pointer;
+
+  margin-left: 10px;
+  margin-bottom: 10px;
 }
 
 button:disabled {
@@ -119,4 +122,68 @@ formbackground {
   font-size: 16px;
   border: 0;
   font-family: "Roboto", sans-serif;
+}
+.productList{
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.productCard{
+  position: relative;
+  background-color: cadetblue;
+  margin: 1rem;
+  flex: 1 0 25rem;
+  max-width: 50rem;
+  max-height: 100rem;
+  transition: 0.2s;
+}
+
+.productCard:hover{
+  transform: translateY(-0.5rem);
+  box-shadow: 0.5rem 0.75rem 1.5rem #bbbbbb;
+}
+
+.productImage{
+  margin-top: 2rem;
+  height: auto;
+  width: 50%;
+  height: 50%;
+  padding: 4px;
+}
+
+.productCard__cart{
+  position: absolute;
+  right: 0;
+  margin: 1rem;
+  font-size: 2rem;
+  transition: 0.2s;
+  cursor: pointer;
+}
+
+.productCard__content {
+  margin: 2rem;
+}
+
+.productName{
+  margin: 2rem;
+  font-size: 2em;
+  text-transform: capitalize;
+  color: var(--textColor);
+}
+
+.displayStack__1,
+.displayStack__2{
+  margin: 2rem 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.productPrice{
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+.product:hover{
+  transform: translateY(-15px);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
 }

@@ -3,7 +3,7 @@
 pragma solidity ^0.8.9;
 import "hardhat/console.sol";
 
-contract ThriftStore {
+contract ThriftStoreContract {
     
     // counter to generate item ID
     uint private idCounter = 0;
@@ -198,6 +198,9 @@ contract ThriftStore {
     // Getter for  all Items posted by user
     function getAllItemIdsPostedByUser(address userAddress) public view returns (uint256[] memory) {
         return itemsPosted[userAddress];
+    }
+     function getItemsMapping(uint256 id) public view returns (ItemInfo memory) {
+        return items[id];
     }
 
     //Getter for  all Items bought by user
