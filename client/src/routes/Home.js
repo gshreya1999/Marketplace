@@ -15,7 +15,7 @@ export default function Home(props) {
 
   return (
     <div className="product">
-      
+     {props.itemName?.length >0  && 
         <div key={props.itemName} className="productCard">
           {props.previews &&
             props.previews.map((pic) => {
@@ -41,7 +41,7 @@ export default function Home(props) {
             </button>
           </div>
         </div>
-      
+}
 
     </div>
   );
