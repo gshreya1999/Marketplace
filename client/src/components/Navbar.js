@@ -7,7 +7,7 @@ export default function Navbar() {
         MarketPlace
       </Link>
       <ul>
-        <CustomLink to="/post">Post An Add</CustomLink>
+        <CustomLink to="/post">Post An Ad</CustomLink>
         <CustomLink to="/settings">Settings</CustomLink>
       </ul>
     </nav>
