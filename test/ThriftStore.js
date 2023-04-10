@@ -5,7 +5,7 @@ const { ethers } = require("hardhat");
 
 describe("Virtual Marketplace/Thrift store", function () {
   beforeEach(async function () {
-    Market = await ethers.getContractFactory("ThriftStore");
+    Market = await ethers.getContractFactory("ThriftStoreContract");
     market = await Market.deploy();
     market.idCounter = 0;
     [owner, seller, buyer,user] = await ethers.getSigners();

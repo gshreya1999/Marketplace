@@ -14,7 +14,7 @@ async function main() {
   // await hre.run('compile');
 
   // We get the contract to deploy
-  const ThriftStore = await hre.ethers.getContractFactory("ThriftStore");
+  const ThriftStore = await hre.ethers.getContractFactory("ThriftStoreContract");
   const thriftStore = await ThriftStore.deploy();
 
   await thriftStore.deployed();
