@@ -1,9 +1,11 @@
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import { ABI, contractAddress } from "../info/info";
 import Home from "./Home";
 
+
 export default function PostAd() {
+ const [items, setItems] = useState([]);
   const [itemName, setItemName] = useState("");
   const [address, setAddress] = useState("");
   const [itemPrice, setItemPrice] = useState("");
@@ -12,13 +14,20 @@ export default function PostAd() {
   const [image, setImage] = useState("");
   const [show, setShow] = useState("");
   const [previews, setPreviews] = useState();
+
   let contract;
   let provider;
   let signer;
-  let allItems;
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    const item = { itemName, itemPrice, itemDescription, itemPickupLocation,image };
+    const item = {
+      itemName,
+      itemPrice,
+      itemDescription,
+      itemPickupLocation,
+      image,
+    };
     // if (window.ethereum) {
     //   window.ethereum
     //     .request({ method: "eth_requestAccounts" })
@@ -43,16 +52,25 @@ export default function PostAd() {
     //   item.itemPrice,
     //   item.itemPickupLocation
     // );
-    
-    // x();
-   setShow(true);
-  }
- 
-  const x = async () => {
-    const item=await contract.getAllItemIdsPostedByUser(address);
-    console.warn(await contract.getItem(item[2]))
-    //setItems(item);
 
+    // x();
+
+    
+    // setItems([...items,{
+    //   itemName: itemName,
+    //   itemDescription: itemDescription,
+    //   itemPrice: itemPrice,
+    //   itemPickupLocation: itemPickupLocation
+    // }]);
+
+    //console.error(items);
+    setShow(true);
+  };
+
+  const x = async () => {
+    const item = await contract.getAllItemIdsPostedByUser(address);
+    console.warn(await contract.getItem(item[2]));
+    //setItems(item);
   };
 
   // rendering previews
@@ -117,13 +135,33 @@ export default function PostAd() {
             required="true"
             name="lastName"
           />
-          <input type="file" name="picture"  accept="image/jpg, image/jpeg, image/png" onChange={(e) => setImage(e.target.files)} />
+          <input
+            type="file"
+            name="picture"
+            accept="image/jpg, image/jpeg, image/png"
+            onChange={(e) => setImage(e.target.files)}
+          />
           <button class="form-field" type="submit">
             Post
           </button>
         </form>
       )}
-      {show && (
+      {/* {show && (
+        <div>
+          {items.map((item)=>{
+            <Home
+            itemName={item.itemName}
+            itemPrice={item.itemPrice}
+            itemDescription={item.itemDescription}
+            itemPickupLocation={item.itemPickupLocation}
+            image={item.image}
+            previews={previews}
+          />
+          })}
+          
+        </div>
+      )} */}
+       {show && (
         <div>
           {" "}
           <Home
