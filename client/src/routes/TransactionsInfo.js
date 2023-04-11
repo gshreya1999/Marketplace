@@ -25,7 +25,7 @@ export default function TransactionsInfo(props) {
 
   return (
     <div className="container-fluid">
-      <h1 className="text-center mb-5">Transaction History</h1>
+      <h1 className="text-center mb-5 heading">Transaction History</h1>
       <div className="table-responsive">
         <table className="table table-hover">
           <thead>
