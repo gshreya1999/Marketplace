@@ -1,3 +1,4 @@
+import { ethers } from "ethers";
 export const contractAddress = '0x5FbDB2315678afecb367f032d93F642f64180aa3';
  export const ABI =  [
   {
@@ -531,3 +532,29 @@ export const contractAddress = '0x5FbDB2315678afecb367f032d93F642f64180aa3';
     "type": "function"
   }
 ];
+export let contract;
+export let provider;
+export let signer;
+export let address;
+
+export function getContractObject(){
+ 
+  if (window.ethereum) {
+    window.ethereum
+      .request({ method: "eth_requestAccounts" })
+      .then((result) => {
+        console.warn(result[0]);
+        address=result[0];
+      });
+  }
+  provider = new ethers.providers.Web3Provider(window.ethereum);
+  provider.send("eth_requestAccounts", []);
+  signer = provider.getSigner();
+  const requestAccounts = async () => {
+    await provider.send("eth_requestAccounts", []);
+  };
+  address=requestAccounts[0];
+  contract = new ethers.Contract(contractAddress, ABI, signer);
+  return contract;
+}
+

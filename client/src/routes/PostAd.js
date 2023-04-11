@@ -3,21 +3,17 @@ import { ethers } from "ethers";
 import { ABI, contractAddress } from "../info/info";
 import Home from "./Home";
 import { useNavigate } from "react-router-dom";
-
+import { useStateValue } from "../StateProvider";
+import { getContractObject } from "../info/info";
 export default function PostAd() {
-  // const [items, setItems] = useState([]);
   const [itemName, setItemName] = useState("");
   const [address, setAddress] = useState("");
   const [itemPrice, setItemPrice] = useState("");
   const [itemDescription, setItemDescription] = useState("");
   const [itemPickupLocation, setItemPickupLocation] = useState("");
   const [image, setImage] = useState();
-  const [show, setShow] = useState("");
-  const [previews, setPreviews] = useState();
 
-  let contract;
-  let provider;
-  let signer;
+  
   let items;
   const navigate = useNavigate();
 
@@ -30,77 +26,24 @@ export default function PostAd() {
       itemPickupLocation,
       image,
     };
-    // if (window.ethereum) {
-    //   window.ethereum
-    //     .request({ method: "eth_requestAccounts" })
-    //     .then((result) => {
-    //       console.warn(result[0]);
-    //       setAddress(result[0]);
-    //     });
-    // }
-    // provider = new ethers.providers.Web3Provider(window.ethereum);
-    // provider.send("eth_requestAccounts", []);
-    // signer = provider.getSigner();
-    // const requestAccounts = async () => {
-    //   await provider.send("eth_requestAccounts", []);
-    // };
-    // console.log(signer.address);
-    // setAddress(requestAccounts[0]);
-    // console.log(address);
-    // contract = new ethers.Contract(contractAddress, ABI, signer);
-    // contract.postAd(
-    //   item.itemName,
-    //   item.itemDescription,
-    //   item.itemPrice,
-    //   item.itemPickupLocation
-    // );
-
-    // x();
-
-    // setItems([...items,{
-    //   itemName: itemName,
-    //   itemDescription: itemDescription,
-    //   itemPrice: itemPrice,
-    //   itemPickupLocation: itemPickupLocation
-    // }]);
-    console.error(items);
-    setShow(true);
+    const contract = getContractObject();
+    contract.postAd(
+      item.itemName,
+      item.itemDescription,
+      item.itemPrice,
+      item.itemPickupLocation
+    );
     navigate("/", {replace:true,
       state: {
         itemName,
         itemPrice,
         itemDescription,
         itemPickupLocation,
-        image,
-        previews
+        image
         
       },
     });
   };
-
-  const x = async () => {
-    const item = await contract.getAllItemIdsPostedByUser(address);
-    console.warn(await contract.getItem(item[2]));
-    //setItems(item);
-  };
-
-  // rendering previews
-  useEffect(() => {
-    if (!image) return;
-    let tmp = [];
-    for (let i = 0; i < image.length; i++) {
-      tmp.push(URL.createObjectURL(image[i]));
-    }
-    const objectUrls = tmp;
-    setPreviews(objectUrls);
-
-    // free memory
-    for (let i = 0; i < objectUrls.length; i++) {
-      return () => {
-        URL.revokeObjectURL(objectUrls[i]);
-      };
-    }
-  }, [image]);
 
   return (
     <div class="form-container">
@@ -114,7 +57,7 @@ export default function PostAd() {
             onChange={(e) => setItemName(e.target.value)}
             placeholder="Item Name"
             required="true"
-            name="firstName"
+            name="itemName"
           />
           <input
             id="text"
