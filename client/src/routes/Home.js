@@ -1,7 +1,6 @@
 
-
 import { useState, useEffect } from "react";
-import '../home.css';
+import '../Home.css';
 
 export default function Home(props) {
   const [itemStatus, setItemStatus] = useState(" Posted ");
