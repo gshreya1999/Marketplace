@@ -13,38 +13,45 @@ function Signup() {
   const handleConfirmPasswordChange = (event) =>
     setConfirmPassword(event.target.value);
 
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    const handleSubmit = (event) => {
-      event.preventDefault();
-    
-      if (email && password && password === confirmPassword) {
-        // Handle form submission here
-        console.log("Email:", email);
-        console.log("Password:", password);
-        console.log("Confirm Password:", confirmPassword);
-    
-        navigate("/home");
-      }
-    };
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    if (email && password && password === confirmPassword) {
+      // Handle form submission here
+      console.log("Email:", email);
+      console.log("Password:", password);
+      console.log("Confirm Password:", confirmPassword);
+
+      navigate("/home");
+    }
+  };
+
+  const handleCancel = () => {
+    navigate("/");
+  };
 
   return (
     <div className="signup">
-      <h2>Signup</h2>
+      <h2 className="signup-title">Signup</h2>
       <form onSubmit={handleSubmit}>
-        <label>
-          Email:
-          <input type="email" value={email} onChange={handleEmailChange} />
-        </label>
-        <label>
-          Password:
-          <input type="password" value={password} onChange={handlePasswordChange} />
-        </label>
-        <label>
-          Confirm Password:
-          <input type="password" value={confirmPassword} onChange={handleConfirmPasswordChange} />
-        </label>
-        <button type="submit">Signup</button>
+        <div className="form-group">
+          <label>Email:</label>
+          <input className="form-control" type="email" value={email} onChange={handleEmailChange} />
+        </div>
+        <div className="form-group">
+          <label>Password:</label>
+          <input className="form-control" type="password" value={password} onChange={handlePasswordChange} />
+        </div>
+        <div className="form-group">
+          <label>Confirm Password:</label>
+          <input className="form-control" type="password" value={confirmPassword} onChange={handleConfirmPasswordChange} />
+        </div>
+        <div className="button-group">
+          <button className="btn btn-primary signup-button" type="submit">Signup</button>
+          <button className="btn btn-secondary cancel-button" type="button" onClick={handleCancel}>Cancel</button>
+        </div>
       </form>
     </div>
   );
