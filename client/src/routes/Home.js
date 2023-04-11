@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 
 export default function Home(props) {
   const [itemStatus, setItemStatus] = useState(" Posted ");
-
+  const location = useLocation();
+ 
   function buyItem() {
     alert('Are you sure you want to do buy this item?');
     setItemStatus(" Sold ");
@@ -14,21 +16,19 @@ export default function Home(props) {
   }
 
   return (
+  
     <div className="product">
-     {props.itemName?.length >0  && 
-        <div key={props.itemName} className="productCard">
-          {props.previews &&
-            props.previews.map((pic) => {
-              return (
-                <img src={pic} alt="product-img" className="productImage"></img>
-              );
-            })}
+     {location.state?.itemName.length >0  && 
+        <div key={location.state.itemName} className="productCard">
+          
+                <img src={URL.createObjectURL(location.state.image)} alt="product-img" className="productImage"></img>
+            
           <div>
-            <h3 className="productName">{props.itemName}</h3>
-            <p>{props.itemDescription}</p>
-            <span>Price: {props.itemPrice} ETH </span>
+            <h3 className="productName">{location.state.itemName}</h3>
+            <p>{location.state.itemDescription}</p>
+            <span>Price: {location.state.itemPrice} ETH </span>
             <div className="productTime">
-              Pick up Location : {props.itemPickupLocation}
+              Pick up Location : {location.state.itemPickupLocation}
             </div>
             <h4>Status:{itemStatus} </h4>
           </div>
