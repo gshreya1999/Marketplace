@@ -8,11 +8,12 @@ export default function Home(props) {
 
 
   function buyItem() {
-    if(itemStatus==" Posted ") {
-      alert('Are you sure you want to do buy this item?');
-      const contract = getContractObject();
-      contract.buyItem(1);
-      setItemStatus(" Sold ");
+    if(itemStatus === " Posted ") {
+      if (window.confirm('Are you sure you want to do buy this item?')) {
+        const contract = getContractObject();
+        contract.buyItem(1);
+        setItemStatus(" Sold ");
+       }
     } else {
       alert('This item cannot be bought because it is already sold or removed.');
     }
@@ -21,10 +22,12 @@ export default function Home(props) {
  
   function removeItem() {
     if (itemStatus === " Posted ") {
-      alert("Are you sure you want to remove this item?");
+    if(window.confirm("Are you sure you want to remove this item?")){
       const contract = getContractObject();
       contract.removeAd(1);
       setItemStatus(" Removed ");
+    }
+    
     } else {
       alert("This item cannot be removed because it is already sold or removed.");
     }
