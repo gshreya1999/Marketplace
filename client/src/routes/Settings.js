@@ -4,8 +4,8 @@ import "./Settings.css";
 export default function Settings(prop) {
   return (
     <div className="container">
-  <h1 className="heading">Account Settings</h1>
-  <div className="row justify-content-center">
+      <h1 className="heading">Account Settings</h1>
+      <div className="row justify-content-center">
         <div className="col-lg-6 col-md-8 col-sm-10">
           <div className="d-grid gap-3">
             <Link to="/update-listing">
@@ -18,7 +18,7 @@ export default function Settings(prop) {
                 <i className="far fa-trash-alt"></i>Remove a Listing
               </button>
             </Link>
-            <Link to="/change-password">
+            <Link to="/changepass">
               <button className="btn btn-primary btn-lg btn-custom" style={{ marginBottom: "50px"}}>
                 <i className="fas fa-key"></i>Change Password
               </button>
