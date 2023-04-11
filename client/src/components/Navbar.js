@@ -1,18 +1,5 @@
-import { Link, useMatch, useResolvedPath } from "react-router-dom";
+import { Link, useMatch, useResolvedPath, useLocation } from "react-router-dom";
 
-export default function Navbar() {
-  return (
-    <nav className="nav">
-      <Link to="/" className="site-title">
-        MarketPlace
-      </Link>
-      <ul>
-        <CustomLink to="/post">Post An Add</CustomLink>
-        <CustomLink to="/settings">Settings</CustomLink>
-      </ul>
-    </nav>
-  )
-}
 
 function CustomLink({ to, children, ...props }) {
   const resolvedPath = useResolvedPath(to)
@@ -26,3 +13,25 @@ function CustomLink({ to, children, ...props }) {
     </li>
   )
 }
+
+function Navbar() {
+  return (
+    <nav className="nav">
+      <Link to="/home" className="site-title">
+        MarketPlace
+      </Link>
+      <ul>
+        <CustomLink to="/post">Post An Ad</CustomLink>
+        <CustomLink to="/settings">Settings</CustomLink>
+      </ul>
+    </nav>
+  )
+}
+
+function App() {
+  const location = useLocation();
+
+  return location.pathname === "/" || location.pathname === "/signup" ? null : <Navbar />;
+}
+
+export default App;
