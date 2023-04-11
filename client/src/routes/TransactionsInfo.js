@@ -7,21 +7,30 @@ export default function TransactionsInfo(props) {
   const [transactions, setTransactions] = useState([
     {
       id: 1,
-      date: "2022-04-10",
-      buyer: "John",
-      seller: "Jane",
-      item: "Product A",
-      price: "$100",
+      date: "2023-04-9",
+      buyer: "0001",
+      seller: "0002",
+      item: "Ball",
+      price: "5 ETH",
     },
     {
       id: 2,
-      date: "2022-04-09",
-      buyer: "Mary",
-      seller: "Mark",
-      item: "Product B",
-      price: "$50",
-    },
+      date: "2023-04-09",
+      buyer: "0002",
+      seller: "0001",
+      item: "Shirt",
+      price: "5 ETH",
+    }
   ]);
+  
+  const [buttonClicked, setButtonClicked] = useState(false);
+
+  const handleButtonClick = () => {
+    if (!buttonClicked) {
+      setButtonClicked(true);
+      alert("Request sent!");
+    }
+  };
 
   return (
     <div className="container-fluid">
@@ -37,7 +46,7 @@ export default function TransactionsInfo(props) {
                 <i className="far fa-calendar-alt"></i> Date
               </th>
               <th>
-                <i className="fas fa-user"></i> Buyer
+                <i className="fas fa-user"></i> Buyer ID
               </th>
               <th>
                 <i className="fas fa-user"></i> Seller
@@ -62,8 +71,8 @@ export default function TransactionsInfo(props) {
                 <td>{transaction.seller}</td>
                 <td>{transaction.item}</td>
                 <td>{transaction.price}</td>
-                <td>
-                  <button className="btn btn-primary">
+                <td className="text-center">
+                  <button className="btn btn-primary" onClick={handleButtonClick}>
                     <i className="far fa-comment-alt"></i> Review/Request Refund
                   </button>
                 </td>
