@@ -1,0 +1,49 @@
+.btn-custom {
+    background-color: #18A558;
+    border-color: #18A558;
+  }
+  
+  .btn-custom:hover {
+    background-color: #16643c;
+    border-color: #16643c;
+  }
+  
+  .btn-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+  }
+  
+  .btn-danger:hover {
+    background-color: #c82333;
+    border-color: #c82333;
+  }
+  
+  .btn-lg {
+    font-size: 1.2rem;
+    padding: 10px 20px;
+  }
+  
+  .btn i {
+    margin-right: 10px;
+  }
+  
+  .fa-trash-alt, .fa-key, .fa-history, .fa-pencil-alt {
+    width: 20px;
+    margin-right: 10px;
+  }
+
+  .container {
+    text-align: center;
+  }
+  
+  .heading {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 2rem;
+    color: #333;
+    background-color: #f5f5f5;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1); /* add a box shadow */
+    display: inline-block; /* display as inline-block to center the container */
+  }
