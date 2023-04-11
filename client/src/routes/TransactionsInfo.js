@@ -11,7 +11,7 @@ export default function TransactionsInfo(props) {
       buyer: "0001",
       seller: "0002",
       item: "Ball",
-      price: "5 ETH",
+      price: "1 ETH",
     },
     {
       id: 2,
@@ -19,7 +19,15 @@ export default function TransactionsInfo(props) {
       buyer: "0002",
       seller: "0001",
       item: "Shirt",
-      price: "5 ETH",
+      price: "1 ETH",
+    }, 
+    {
+      id: 3,
+      date: "2023-04-11",
+      buyer: "0001",
+      seller: "0002",
+      item: "Blue Shirt",
+      price: "0.5 ETH",
     }
   ]);
   
