@@ -7,6 +7,7 @@ import { Route, Routes } from "react-router-dom"
 import TransactionsInfo from './routes/TransactionsInfo';
 import Login from './routes/Login';
 import Signup from './routes/SignUp';
+import ChangePassword from "./routes/ChangePassword"
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="/post" element={<PostAd />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/transactions" element={<TransactionsInfo />} />
+          <Route path="/changepass" element={<ChangePassword /> } />
         </Routes>
       </div>
     </>
