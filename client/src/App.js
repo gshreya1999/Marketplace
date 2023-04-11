@@ -6,7 +6,6 @@ import PostAd from "./routes/PostAd"
 import { Route, Routes } from "react-router-dom"
 import TransactionsInfo from './routes/TransactionsInfo';
 function App() {
-
   return (
     <>
       <Navbar />

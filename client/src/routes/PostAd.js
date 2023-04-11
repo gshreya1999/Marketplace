@@ -2,22 +2,24 @@ import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import { ABI, contractAddress } from "../info/info";
 import Home from "./Home";
-
+import { useNavigate } from "react-router-dom";
 
 export default function PostAd() {
- const [items, setItems] = useState([]);
+  // const [items, setItems] = useState([]);
   const [itemName, setItemName] = useState("");
   const [address, setAddress] = useState("");
   const [itemPrice, setItemPrice] = useState("");
   const [itemDescription, setItemDescription] = useState("");
   const [itemPickupLocation, setItemPickupLocation] = useState("");
-  const [image, setImage] = useState("");
+  const [image, setImage] = useState();
   const [show, setShow] = useState("");
   const [previews, setPreviews] = useState();
 
   let contract;
   let provider;
   let signer;
+  let items;
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -55,16 +57,25 @@ export default function PostAd() {
 
     // x();
 
-    
     // setItems([...items,{
     //   itemName: itemName,
     //   itemDescription: itemDescription,
     //   itemPrice: itemPrice,
     //   itemPickupLocation: itemPickupLocation
     // }]);
-
-    //console.error(items);
+    console.error(items);
     setShow(true);
+    navigate("/", {replace:true,
+      state: {
+        itemName,
+        itemPrice,
+        itemDescription,
+        itemPickupLocation,
+        image,
+        previews
+        
+      },
+    });
   };
 
   const x = async () => {
@@ -93,7 +104,7 @@ export default function PostAd() {
 
   return (
     <div class="form-container">
-      {!show && (
+      
         <form class="register-form" onSubmit={handleSubmit}>
           <input
             id="first-name"
@@ -139,41 +150,13 @@ export default function PostAd() {
             type="file"
             name="picture"
             accept="image/jpg, image/jpeg, image/png"
-            onChange={(e) => setImage(e.target.files)}
+            onChange={(e) => setImage(e.target.files[0])}
           />
           <button class="form-field" type="submit">
             Post
           </button>
         </form>
-      )}
-      {/* {show && (
-        <div>
-          {items.map((item)=>{
-            <Home
-            itemName={item.itemName}
-            itemPrice={item.itemPrice}
-            itemDescription={item.itemDescription}
-            itemPickupLocation={item.itemPickupLocation}
-            image={item.image}
-            previews={previews}
-          />
-          })}
-          
-        </div>
-      )} */}
-       {show && (
-        <div>
-          {" "}
-          <Home
-            itemName={itemName}
-            itemPrice={itemPrice}
-            itemDescription={itemDescription}
-            itemPickupLocation={itemPickupLocation}
-             image ={image}
-             previews={previews}
-          />
-        </div>
-      )}
-    </div>
+      
+  </div> 
   );
 }
