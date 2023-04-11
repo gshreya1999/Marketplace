@@ -2,19 +2,23 @@ import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import { ABI, contractAddress } from "../info/info";
 import Home from "./Home";
-import { useNavigate } from "react-router-dom";
-import { getContractObject } from "../info/info";
+import Post from "./Post";
+
+
 export default function PostAd() {
+ const [items, setItems] = useState([]);
   const [itemName, setItemName] = useState("");
   const [address, setAddress] = useState("");
   const [itemPrice, setItemPrice] = useState("");
   const [itemDescription, setItemDescription] = useState("");
   const [itemPickupLocation, setItemPickupLocation] = useState("");
-  const [image, setImage] = useState();
+  const [image, setImage] = useState("");
+  const [show, setShow] = useState("");
+  const [previews, setPreviews] = useState();
 
-  
-  let items;
-  const navigate = useNavigate();
+  let contract;
+  let provider;
+  let signer;
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -25,28 +29,40 @@ export default function PostAd() {
       itemPickupLocation,
       image,
     };
-    const contract = getContractObject();
-    navigate("/home", {replace:true,
-      state: {
-        itemName,
-        itemPrice,
-        itemDescription,
-        itemPickupLocation,
-        image
-        
-      },
-    });
-    contract.postAd(
-      item.itemName,
-      item.itemDescription,
-      item.itemPrice,
-      item.itemPickupLocation
-    );
+    // create a copy of the items array and add the new item to it
+    const newItems = [...items, item];
+    // set the state variable to the new items array
+    setItems(newItems);
+    setShow(true);
   };
+
+  const x = async () => {
+    const item = await contract.getAllItemIdsPostedByUser(address);
+    console.warn(await contract.getItem(item[2]));
+    //setItems(item);
+  };
+
+  // rendering previews
+  useEffect(() => {
+    if (!image) return;
+    let tmp = [];
+    for (let i = 0; i < image.length; i++) {
+      tmp.push(URL.createObjectURL(image[i]));
+    }
+    const objectUrls = tmp;
+    setPreviews(objectUrls);
+
+    // free memory
+    for (let i = 0; i < objectUrls.length; i++) {
+      return () => {
+        URL.revokeObjectURL(objectUrls[i]);
+      };
+    }
+  }, [image]);
 
   return (
     <div class="form-container">
-      
+      {!show && (
         <form class="register-form" onSubmit={handleSubmit}>
           <input
             id="first-name"
@@ -56,7 +72,7 @@ export default function PostAd() {
             onChange={(e) => setItemName(e.target.value)}
             placeholder="Item Name"
             required="true"
-            name="itemName"
+            name="firstName"
           />
           <input
             id="text"
@@ -92,13 +108,41 @@ export default function PostAd() {
             type="file"
             name="picture"
             accept="image/jpg, image/jpeg, image/png"
-            onChange={(e) => setImage(e.target.files[0])}
+            onChange={(e) => setImage(e.target.files)}
           />
           <button class="form-field" type="submit">
             Post
           </button>
         </form>
-      
-  </div> 
+      )}
+      {/* {show && (
+        <div>
+          {items.map((item)=>{
+            <Home
+            itemName={item.itemName}
+            itemPrice={item.itemPrice}
+            itemDescription={item.itemDescription}
+            itemPickupLocation={item.itemPickupLocation}
+            image={item.image}
+            previews={previews}
+          />
+          })}
+          
+        </div>
+      )} */}
+       {show && (
+        <div>
+          {" "}
+          <Post
+            itemName={itemName}
+            itemPrice={itemPrice}
+            itemDescription={itemDescription}
+            itemPickupLocation={itemPickupLocation}
+             image ={image}
+             previews={previews}
+          />
+        </div>
+      )}
+    </div>
   );
 }
