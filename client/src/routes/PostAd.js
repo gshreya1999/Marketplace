@@ -3,7 +3,6 @@ import { ethers } from "ethers";
 import { ABI, contractAddress } from "../info/info";
 import Home from "./Home";
 import { useNavigate } from "react-router-dom";
-import { useStateValue } from "../StateProvider";
 import { getContractObject } from "../info/info";
 export default function PostAd() {
   const [itemName, setItemName] = useState("");
@@ -27,13 +26,7 @@ export default function PostAd() {
       image,
     };
     const contract = getContractObject();
-    contract.postAd(
-      item.itemName,
-      item.itemDescription,
-      item.itemPrice,
-      item.itemPickupLocation
-    );
-    navigate("/", {replace:true,
+    navigate("/home", {replace:true,
       state: {
         itemName,
         itemPrice,
@@ -43,6 +36,12 @@ export default function PostAd() {
         
       },
     });
+    contract.postAd(
+      item.itemName,
+      item.itemDescription,
+      item.itemPrice,
+      item.itemPickupLocation
+    );
   };
 
   return (
