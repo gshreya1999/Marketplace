@@ -3,7 +3,7 @@ import "bootstrap/dist/css/bootstrap.css";
 import "./ChangePassword.css";
 import { useNavigate } from "react-router-dom";
 
-export default function ChangePassword(props) {
+export default function ChangePassword() {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");

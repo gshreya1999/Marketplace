@@ -543,7 +543,6 @@ export function getContractObject(){
     window.ethereum
       .request({ method: "eth_requestAccounts" })
       .then((result) => {
-        console.warn(result[0]);
         address=result[0];
       });
   }

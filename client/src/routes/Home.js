@@ -1,82 +1,31 @@
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import '../Home.css';
+import { getContractObject } from "../info/info";
 
 export default function Home(props) {
-  const [itemStatus, setItemStatus] = useState(" Posted ");
-  const [listings, setListings] = useState([
-    {
-      itemName: "Blue Shirt",
-      itemDescription: "A stylish blue shirt for any occasion",
-      itemPrice: 0.5,
-      itemPickupLocation: "New York, NY",
-      itemStatus: "Available",
-      previews: [
-        "bluet.jpg",
-      ],
-    },
-    {
-      itemName: "Red Sneakers",
-      itemDescription: "Comfortable red sneakers for running or walking",
-      itemPrice: 1.2,
-      itemPickupLocation: "San Francisco, CA",
-      itemStatus: "Available",
-      previews: [
-        "reds.jpg",
-      ],
-    },
-    {
-      itemName: "Black Jeans",
-      itemDescription: "Classic black jeans for everyday wear",
-      itemPrice: 0.8,
-      itemPickupLocation: "Los Angeles, CA",
-      itemStatus: "Available",
-      previews: [
-        "blackj.jpg",
-      ],
-    },
-    {
-      itemName: "White Sneakers",
-      itemDescription: "Comfortable white sneakers for running or walking",
-      itemPrice: 1.2,
-      itemPickupLocation: "San Francisco, CA",
-      itemStatus: "Available",
-      previews: [
-        "whites.jpg",
-      ],
-    },
-    {
-      itemName: "Navy Jeans",
-      itemDescription: "Classic navy jeans for everyday wear",
-      itemPrice: 0.8,
-      itemPickupLocation: "Los Angeles, CA",
-      itemStatus: "Available",
-      previews: [
-        "navyj.jpg",
-      ],
-    },
-    {
-      itemName: "Red Shirt",
-      itemDescription: "A stylish red shirt for any occasion",
-      itemPrice: 2.4,
-      itemPickupLocation: "New York, NY",
-      itemStatus: "Available",
-      previews: [
-        "redt.jpg",
-      ],
-    },
-  ]);
+  const [itemStatus, setItemStatus] = useState("Available");
+  const [listings, setListings] = useState([]);
   
-  function buyItem(index) {
+  function buyItem(id) {
+    const updatedListings = [...listings];
+    if(updatedListings[id].itemStatus === "Available") {
     if(window.confirm('Are you sure you want to buy this item?')){
-      const updatedListings = [...listings];
-      updatedListings[index].itemStatus = "Sold";
+      const contract = getContractObject();
+      contract.buyItem(id);
+      updatedListings[id].itemStatus = "Sold";
       setListings(updatedListings);
     }
   }
+    else {
+      alert('This item cannot be bought because it is already sold or removed.');
+    }
+  }
 
-  function removeItem() {
+  function removeItem(id) {
     alert('Are you sure you want to remove this item?');
+    const contract = getContractObject();
+    contract.removeAd(id);
     setItemStatus(" Removed ");
   }
   
@@ -115,7 +64,7 @@ export default function Home(props) {
                 </div>
               </div>
               <div className="productActions">
-              <button className="button" onClick={() => buyItem(index)} disabled={listing.itemStatus === 'Sold'}>
+              <button className="button" onClick={() => buyItem(index)} >
                   <i className="fas fa-shopping-cart"></i>
                   Buy
                 </button>
